@@ -1,0 +1,97 @@
+<div class="container mt-3 mb-3">
+
+  <div *ngIf="!poll"
+    class="row justify-content-center">
+    <md-spinner></md-spinner>
+  </div>
+
+  <div *ngIf="poll"
+    class="container row bg-plate min-width shadow">
+
+    <div class="col">
+      <h2 class="poll-title mt-3">{{poll.name}}</h2>
+      <hr class="mb-5">
+
+      <form [formGroup]="optionsFG">
+
+        <ng-container *ngIf="poll.multiOptions">
+          <div *ngFor="let control of optionsFG.controls['selected'].controls; let i = index;"
+            class="container">
+            <md-checkbox [formControl]="control"
+              color="primary">{{poll.options[i].name}}</md-checkbox>
+          </div>
+        </ng-container>
+
+        <md-radio-group *ngIf="!poll.multiOptions"
+          formControlName="selected">
+          <div *ngFor="let option of poll.options; let i = index;"
+            class="container">
+            <md-radio-button color="primary"
+              [value]="i">
+              <div class="radio-button-label ml-2">{{option.name}}</div>
+            </md-radio-button>
+          </div>
+        </md-radio-group>
+
+      </form>
+
+      <div class="container mb-3">
+        <div class="row justify-content-center mb-1">
+          <button class="btn btn-success rounded-0"
+            data-toggle="tooltip"
+            data-placement="top"
+            [title]="tooltip"
+            [disabled]="!optionsFG.valid || poll.state === 'CLOSED' || voted"
+            (click)="vote()">Vote</button>
+          <button *ngIf="!results"
+            class="btn btn-secondary rounded-0"
+            (click)="viewResults()">View Results</button>
+          <button *ngIf="results"
+            [disabled]="poll.state === 'CLOSED'"
+            class="btn btn-outline-secondary rounded-0"
+            (click)="refresh()">Refresh</button>
+        </div>
+        <div *ngIf="poll.state === 'CLOSED'"
+          class="row justify-content-center text-danger">Poll is closed</div>
+        <div *ngIf="voted"
+          class="row justify-content-center text-success">Thanks for your vote!</div>
+      </div>
+
+      <div *ngIf="results"
+        class="col">
+
+        <div *ngIf="!poll.totalVotes"
+          class="row justify-content-center">
+          <h2 class="text-warning">There is no any votes yet</h2>
+        </div>
+
+        <div *ngIf="poll.totalVotes">
+          <div class="row justify-content-center">
+            <div class="col-3">
+              <div class="row h-75">
+              </div>
+              <h4><strong><u>{{poll.totalVotes}} total votes!</u></strong></h4>
+            </div>
+            <div class="col-8 chart">
+              <ngx-charts-pie-chart [labels]=true
+                [results]="ngxChartData"></ngx-charts-pie-chart>
+            </div>
+          </div>
+          <div class="container mb-4">
+            <div *ngFor="let option of poll.options; let i = index;">
+              <h5 class="">{{option.name}}</h5>
+              <div class="progress mb-3">
+                <div class="progress-bar progress-bar-striped progress-lg bg-inverse"
+                  role="progressbar"
+                  [style.width]="getProgress(i) + '%'"
+                  aria-valuenow="option.votesCount"
+                  aria-valuemin="0"
+                  aria-valuemax="poll.totalVotes">{{option.votesCount}}({{getRoundedProgress(i)}}%)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

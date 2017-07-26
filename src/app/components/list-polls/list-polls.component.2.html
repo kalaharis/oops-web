@@ -1,0 +1,135 @@
+<div class="row justify-content-center mt-3 mb-3">
+  <h1>Polls List</h1>
+</div>
+
+<div *ngIf="!page"
+  class="row justify-content-center">
+  <md-spinner></md-spinner>
+</div>
+
+<div *ngIf="page"
+  class="container bg-plate shadow min-width-500"
+  [@slideDown]="">
+
+  <div class="row justify-content-end">
+    <button md-icon-button
+      mdTooltip="Filter"
+      (click)="showFilter()"><md-icon>filter_list</md-icon></button>
+  </div>
+
+  <form *ngIf="filter"
+    [formGroup]="filterFG"
+    class="row justify-content-center mb-3"
+    [@slideUpDown]="">
+
+    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-7">
+
+      <div class="row">
+        <div class="col">
+          <md-checkbox color="primary"
+            formControlName="open">Show only ongoing polls</md-checkbox>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <md-input-container class="w-50">
+            <span mdPrefix>Tags: &nbsp;</span>
+            <input formControlName="tags"
+              type="text"
+              mdInput>
+            <md-hint align="start">example: "walking dead, tv, zombie"</md-hint>
+          </md-input-container>
+        </div>
+      </div>
+
+      <div class="row justify-content-between">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+          <oops-datepicker placeholder="Created after"
+            formControlName="start"></oops-datepicker>
+          <!--<md-input-container class="w-50">
+            <input mdInput
+              formControlName="start"
+              placeholder="Created after"
+              #dateStartInput
+              [mdDatepicker]="pickerStart">
+            <md-hint align="start"><strong>GMT/UTC</strong></md-hint>
+          </md-input-container>
+          <md-datepicker #pickerStart></md-datepicker>
+          <button md-icon-button
+            (click)="pickerStart.open()"><md-icon>today</md-icon></button>
+          <button md-icon-button
+            (click)="clearStart()"><md-icon>clear</md-icon></button>-->
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+          <oops-datepicker placeholder="Created before"
+            formControlName="end"></oops-datepicker>
+          <!--<md-input-container class="w-50">
+            <input mdInput
+              formControlName="end"
+              placeholder="Created before"
+              #dateEndInput
+              [mdDatepicker]="pickerEnd">
+            <md-hint align="start"><strong>GMT/UTC</strong></md-hint>
+          </md-input-container>
+          <md-datepicker #pickerEnd></md-datepicker>
+          <button md-icon-button
+            (click)="pickerEnd.open()"><md-icon>today</md-icon></button>
+          <button md-icon-button
+            (click)="clearDate(dateEndInput)"><md-icon>clear</md-icon></button>-->
+        </div>
+      </div>
+
+      <div class="row justify-content-end mt-3">
+        <div class="col-4">
+          <button class="btn btn-outline-info col-8"
+            (click)="filterList()">Apply</button>
+        </div>
+      </div>
+
+    </div>
+  </form>
+
+  <hr>
+
+  <div class="row">
+
+    <a *ngFor="let poll of page.content; let i = index;"
+      class="list-group-item list-group-item-action border-0 bg-plate col-xs-12 col-sm-12 col-md-12 col-lg-6"
+      [routerLink]="['/view', poll.id]">
+
+      <div class="col-4">
+        <ngx-charts-pie-chart [results]="ngxChartsData[i]">
+        </ngx-charts-pie-chart>
+      </div>
+
+      <div class="col-8">
+        <h6 class="mb-1 row justify-content-center crop"
+          data-toggle="tooltip"
+          data-placement="bottom"
+          title="{{poll.name}}">{{poll.name}}</h6>
+        <div class="row">
+          <small *ngFor="let tag of poll.tags"
+            class="mr-1"><ins>{{tag}}</ins></small>
+        </div>
+        <h6 class="row mt-2">Created {{poll.createDate | date: 'dd-MM-yyyy'}} at {{poll.createDate | date: 'HH:mm:ss Z'}}</h6>
+        <h6 *ngIf="poll.state === 'OPEN'"
+          class="row text-warning">Expires {{poll.expireDate | date: 'dd-MM-yyyy'}} at {{poll.expireDate | date: 'HH:mm:ss Z'}}</h6>
+        <h6 *ngIf="poll.state === 'CLOSED'"
+          class="row text-danger">Expires {{poll.expireDate | date: 'dd-MM-yyyy'}} at {{poll.expireDate | date: 'HH:mm:ss Z'}}</h6>
+        <div class="row"><strong>Votes: {{poll.totalVotes}}</strong></div>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="row justify-content-end">
+    <md-paginator [pageIndex]="paginator.pageIndex"
+      [length]="page.totalElements"
+      [pageSize]="page.size"
+      [pageSizeOptions]="[4,10,20,100]"
+      (page)="pageChanged($event)">
+    </md-paginator>
+  </div>
+</div>

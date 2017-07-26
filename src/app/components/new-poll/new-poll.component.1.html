@@ -1,0 +1,112 @@
+<div class="container mt-3 mb-3">
+
+  <div class="row justify-content-center">
+    <h1>Create Poll</h1>
+  </div>
+
+  <div class="container row bg-plate shadow">
+    <!-- bootstrap grid system -->
+    <div class="col-xs-2 col-sm-2 col-md-3 col-lg-3"></div>
+
+    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6">
+      <form [formGroup]="creationFG"
+        class="form-group mt-3">
+
+        <div class="row">
+          <md-input-container class="input-question">
+            <input mdInput
+              formControlName="question"
+              placeholder="Question">
+          </md-input-container>
+        </div>
+
+        <div class="row justify-content-start">
+          <button *ngFor="let tag of creationFG.controls.tags.controls; let i = index;"
+            class="btn btn-sm btn-link"
+            data-toggle="tooltip"
+            data-placement="bottom"
+            title="remove"
+            (click)="removeTag(i)">{{tag.value}} &#10005;</button>
+        </div>
+
+        <md-input-container *ngIf="editingTags"
+          class="input-tag row justify-content-start w-50">
+          <input mdInput
+            #tagInput
+            ngAutofocus
+            (blur)="saveTag(tagInput)"
+            (keydown.enter)="saveTag(tagInput)"
+            (keydown.escape)="editTag()">
+        </md-input-container>
+
+        <div class="row justify-content-start mt-4 mb-5">
+          <button *ngIf="!editingTags"
+            class="btn btn-outline-primary btn-sm"
+            (click)="editTag();">Add tag</button>
+        </div>
+
+        <div class="row">
+          <md-input-container *ngFor="let option of creationFG.controls.options.controls; let i = index;"
+            class="input-option"
+            formArrayName="options">
+            <span mdPrefix>{{i+1}}. &nbsp;</span>
+            <input mdInput
+              formControlName="{{i}}"
+              placeholder="Option"
+              (focus)="onFocus(i)">
+          </md-input-container>
+        </div>
+
+        <!-- for better view -->
+        <div class="row mt-5"></div>
+
+        <div class="row justify-content-center"
+          *ngIf="advanced"
+          [@slideUpDown]="advanced">
+          <md-list>
+
+            <md-list-item>
+              <md-checkbox color="primary">Multiple options</md-checkbox>
+            </md-list-item>
+
+            <md-list-item>
+              <md-checkbox color="primary">Private(direct link only)</md-checkbox>
+            </md-list-item>
+
+            <md-list-item class="mt-3">
+              <oops-datepicker class="" placeholder='Expire date'
+                formControlName="expire"></oops-datepicker>
+              <!-- <md-input-container class="mb-4">
+                <input mdInput
+                  #dateInput
+                  formControlName="expire"
+                  placeholder="Expire date"
+                  [mdDatepicker]="picker">
+                <md-hint align="start"><strong>GMT/UTC</strong></md-hint>
+              </md-input-container>
+              <md-datepicker #picker></md-datepicker>
+              <button class="btn btn-outline-info btn-sm ml-2"
+                (click)="picker.open()"><md-icon>today</md-icon></button>
+              <button class="btn btn-outline-danger btn-sm"
+                (click)="clearDate(dateInput)"><md-icon>clear</md-icon></button>-->
+            </md-list-item>
+
+          </md-list>
+        </div>
+
+        <div class="row justify-content-end mt-5 mb-3">
+          <button class="btn btn-success btn-lg rounded-0"
+            [disabled]="!creationFG.valid"
+            (click)="create()">Create</button>
+          <button class="btn btn-secondary btn-lg rounded-0"
+            (click)="showAdvanced()">Advanced</button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- bootstrap grid system -->
+    <div class="col-xs-2 col-sm-2 col-md-3 col-lg-3"></div>
+  </div>
+
+</div>

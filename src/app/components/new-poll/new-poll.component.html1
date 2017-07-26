@@ -1,0 +1,121 @@
+<div class="container mt-3 mb-3">
+
+  <div class="row justify-content-center">
+    <h1>Create Poll</h1>
+  </div>
+
+  <div class="container row bg-plate shadow">
+
+    <div class="col-3"></div>
+
+    <div class="col-6">
+
+      <form [formGroup]="creationFG"
+        class="form-group mt-3">
+
+        <div class="row">
+          <md-input-container class="input-question">
+            <input mdInput
+              formControlName="question"
+              placeholder="Question">
+          </md-input-container>
+        </div>
+
+        <div class="row justify-content-start">
+
+          <div *ngFor="let tag of creationFG.controls.tags.controls; let i = index;">
+
+            <button class="btn btn-sm btn-link"
+              (click)="removeTag(i)">
+              {{tag.value}} &#10005;
+              </button>
+
+            <!--<button class="btn btn-sm btn-link"
+              [hidden]="tag.get('edit').value"
+              [disabled]="tag.get('edit').value"
+              (click)="removeTag(i)">
+              {{tag.get('text').value}} &#10005;
+              </button>
+            <md-input-container class="input-tag">
+              <input mdInput [hidden]="!tag.get('edit').value"
+                [autofocus]
+                (blur)="saveTag($event.target.value, i)"
+                (keydown.enter)="saveTag($event.target.value, i)"
+                (keyup.escape)="removeTag(i)">
+            </md-input-container>-->
+          </div>
+
+        </div>
+
+        <md-input-container class="input-tag"
+          [hidden]="!editingTags">
+          <input mdInput
+            #tagInput
+            [autofocus]
+            (blur)="saveTag(tagInput)"
+            (keydown.enter)="saveTag(tagInput)"
+            (keyup.escape)="editTag()">
+        </md-input-container>
+
+        <div class="row justify-content-start mt-3 mb-5"
+          [hidden]="editingTags">
+          <button class="btn btn-outline-secondary btn-sm"
+            (click)="editTag()">Add tag</button>
+        </div>
+
+        <div class="row"
+          formArrayName="options"
+          *ngFor="let option of creationFG.controls.options.controls; let i = index;">
+          <md-input-container class="input-option">
+            <span mdPrefix>{{i+1}}. &nbsp;</span>
+            <input mdInput
+              formControlName="{{i}}"
+              placeholder="Option"
+              (focus)="onFocus(i)">
+          </md-input-container>
+        </div>
+
+        <div hidden>
+          <label>*form status: {{creationFG.status}}*</label>
+        </div>
+
+        <div class="row ml-1 mt-5"
+          [hidden]="!advance">
+          <div class="row input-group">
+            <md-checkbox color="primary">Multiple options</md-checkbox>
+          </div>
+          <div class="row input-group">
+            <md-checkbox color="primary">Private(direct link only)</md-checkbox>
+          </div>
+          <div class="row">
+            <md-input-container>
+              <input mdInput
+                [mdDatepicker]="picker"
+                placeholder="Expire date">
+              <md-hint align="start"><strong>GMT/UTC</strong> </md-hint>
+              <button mdSuffix
+                [mdDatepickerToggle]="picker"></button>
+              <button mdSuffix><md-icon>clear</md-icon></button>
+            </md-input-container>
+            <md-datepicker #picker></md-datepicker>
+          </div>
+        </div>
+
+        <div class="row justify-content-end mt-5 mb-3">
+          <button class="btn btn-success btn-lg rounded-0"
+            [disabled]="!creationFG.valid"
+            (click)="create()">Create</button>
+          <button class="btn btn-secondary btn-lg rounded-0"
+            (click)="showAdvanced()">Advanced</button>
+        </div>
+
+      </form>
+
+
+    </div>
+
+    <div class="col-3"></div>
+
+  </div>
+
+</div>

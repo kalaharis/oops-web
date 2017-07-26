@@ -1,0 +1,31 @@
+$min-size: 400px;
+
+h2.poll-title{
+    word-wrap: break-word;
+}
+
+md-radio-button{
+    .radio-button-label{
+        white-space: normal;
+    }
+}
+
+div{
+    .min-width{
+        min-width: $min-size;
+    }
+    .chart{
+        min-width: $min-size;
+        min-height: $min-size
+    }
+    .progress-lg{
+        min-height: 30px;
+        font-size: 18px;
+        text-align: center;
+        padding: 5px;
+    }
+}
+
+
+
+
